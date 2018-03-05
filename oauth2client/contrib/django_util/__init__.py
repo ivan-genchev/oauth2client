@@ -230,13 +230,18 @@ import importlib
 
 import django.conf
 from django.core import exceptions
-from django.core import urlresolvers
+
 from six.moves.urllib import parse
 
 from oauth2client import clientsecrets
 from oauth2client import transport
 from oauth2client.contrib import dictionary_storage
 from oauth2client.contrib.django_util import storage
+
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 GOOGLE_OAUTH2_DEFAULT_SCOPES = ('email',)
 GOOGLE_OAUTH2_REQUEST_ATTRIBUTE = 'oauth'
@@ -408,7 +413,7 @@ def _redirect_with_params(url_name, *args, **kwargs):
     Returns:
         A properly formatted redirect string.
     """
-    url = urlresolvers.reverse(url_name, args=args)
+    url = reverse(url_name, args=args)
     params = parse.urlencode(kwargs, True)
     return "{0}?{1}".format(url, params)
 
